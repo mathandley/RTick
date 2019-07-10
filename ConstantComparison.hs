@@ -39,5 +39,14 @@ comp (x : xs) (y : ys) = pure (&& x == y) </> comp xs ys
   -> { tcost (comp p u1) == tcost (comp p u2) }
 @-}
 prop :: [Bit] -> [Bit] -> [Bit] -> Proof
-prop [] _ _ = ()
-prop (_ : ps) (_: u1s) (_ : u2s) = prop ps u1s u2s
+prop p u1 u2 = (comp p u1 *** QED) ? (comp p u2 *** QED)
+
+{-@ propRel
+  :: p:[Bit]
+  -> { u1:[Bit] | length u1 == length p }
+  -> { u2:[Bit] | length u2 == length p }
+  -> { tcost (comp p u1) == tcost (comp p u2) }
+@-}
+propRel :: [Bit] -> [Bit] -> [Bit] -> Proof
+propRel [] _ _ = ()
+propRel (_ : ps) (_: u1s) (_ : u2s) = propRel ps u1s u2s
